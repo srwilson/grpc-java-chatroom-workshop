@@ -51,7 +51,7 @@ public class ChatClient {
   private final ConsoleReader console = new ConsoleReader();
 
   // Initialize Tracing contexts
-  private final AsyncReporter<Span> reporter = AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v1/spans"));
+  private final AsyncReporter<Span> reporter = AsyncReporter.create(URLConnectionSender.create(EnvVars.ZIPKIN_URL));
   private final GrpcTracing tracing = GrpcTracing.create(Tracing.newBuilder()
           .localServiceName("chat-client")
           .reporter(reporter)

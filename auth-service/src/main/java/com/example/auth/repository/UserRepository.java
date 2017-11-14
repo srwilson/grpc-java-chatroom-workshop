@@ -17,6 +17,7 @@
 package com.example.auth.repository;
 
 import com.example.auth.AuthServer;
+import com.example.auth.EnvVars;
 import com.example.auth.domain.User;
 
 import java.io.*;
@@ -34,7 +35,7 @@ public class UserRepository {
 
   private static Logger logger = Logger.getLogger(AuthServer.class.getName());
 
-  private static final String FILENAME = "./userdatabase.txt";
+  private static final String FILENAME = "userdatabase.txt";
 
   private ConcurrentHashMap<String, User> users = new ConcurrentHashMap<>();
 
@@ -90,15 +91,18 @@ public class UserRepository {
           e.printStackTrace();
         }
       });
-      System.out.println("Finished writing user database");
+      logger.info("Finished writing user database");
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   private File getOrCreateFile() throws Exception {
-    File file = new File(FILENAME);
+    String filePath = EnvVars.DATABASE_PATH + "/" + FILENAME;
+    logger.info("loading users database file from path: " + filePath);
+    File file = new File(filePath);
     if (!file.exists()) {
+      logger.info("user database not found, creating ...");
       boolean createdFile = file.createNewFile();
       if (!createdFile)
         throw new Exception("Could not create file");

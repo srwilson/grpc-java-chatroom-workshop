@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  db-path: "/opt/docker/db"
+  db-path: "/app"
   zipkin-host: "http://zipkin"
   zipkin-port: "9411"
   auth-service-host: "auth-service"

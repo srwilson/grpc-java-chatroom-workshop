@@ -44,7 +44,7 @@ public class AuthServer {
   }
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    final AsyncReporter<Span> reporter = AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v1/spans"));
+    final AsyncReporter<Span> reporter = AsyncReporter.create(URLConnectionSender.create(EnvVars.ZIPKIN_URL));
     final GrpcTracing tracing = GrpcTracing.create(Tracing.newBuilder()
         .localServiceName("auth-service")
         .reporter(reporter)

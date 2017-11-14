@@ -20,6 +20,7 @@ import brave.Tracing;
 import brave.grpc.GrpcTracing;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.auth.AuthenticationServiceGrpc;
+import com.example.auth.EnvVars;
 import com.example.chat.grpc.ChatRoomServiceImpl;
 import com.example.chat.grpc.ChatStreamServiceImpl;
 import com.example.chat.grpc.JwtServerInterceptor;
@@ -39,7 +40,7 @@ public class ChatServer {
   private static final Logger logger = Logger.getLogger(ChatServer.class.getName());
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    final AsyncReporter<Span> reporter = AsyncReporter.create(URLConnectionSender.create("http://localhost:9411/api/v1/spans"));
+    final AsyncReporter<Span> reporter = AsyncReporter.create(URLConnectionSender.create(EnvVars.ZIPKIN_URL));
     final GrpcTracing tracing = GrpcTracing.create(Tracing.newBuilder()
         .localServiceName("chat-service")
         .reporter(reporter)
