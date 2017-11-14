@@ -53,7 +53,7 @@ public class AuthServer {
     final Algorithm algorithm = Algorithm.HMAC256("secret");
     final AuthServiceImpl authService = new AuthServiceImpl(repository, "auth-issuer", algorithm);
 
-    final Server server = ServerBuilder.forPort(9091)
+    final Server server = ServerBuilder.forPort(EnvVars.AUTH_SERVICE_PORT)
         .addService(ServerInterceptors.intercept(authService, tracing.newServerInterceptor()))
         .build();
 
@@ -65,7 +65,7 @@ public class AuthServer {
     });
     server.start();
 
-    logger.info("Server started on port 9091");
+    logger.info("Server started on port " + EnvVars.AUTH_SERVICE_PORT);
 
     server.awaitTermination();
 

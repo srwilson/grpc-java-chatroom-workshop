@@ -49,7 +49,7 @@ public class ChatServer {
     final ChatRoomRepository repository = new ChatRoomRepository();
     final JwtServerInterceptor jwtServerInterceptor = new JwtServerInterceptor("auth-issuer", Algorithm.HMAC256("secret"));
 
-    final ManagedChannel authChannel = ManagedChannelBuilder.forTarget("localhost:9091")
+    final ManagedChannel authChannel = ManagedChannelBuilder.forTarget(EnvVars.AUTH_SERVICE_URL)
         .intercept(tracing.newClientInterceptor())
         .usePlaintext(true)
         .build();
@@ -58,7 +58,7 @@ public class ChatServer {
     final ChatRoomServiceImpl chatRoomService = new ChatRoomServiceImpl(repository, authService);
     final ChatStreamServiceImpl chatStreamService = new ChatStreamServiceImpl(repository);
 
-    final Server server = ServerBuilder.forPort(9092)
+    final Server server = ServerBuilder.forPort(EnvVars.CHAT_SERVICE_PORT)
         .addService(ServerInterceptors.intercept(chatRoomService, jwtServerInterceptor, tracing.newServerInterceptor()))
         .addService(ServerInterceptors.intercept(chatStreamService, jwtServerInterceptor, tracing.newServerInterceptor()))
         .build();
@@ -72,7 +72,7 @@ public class ChatServer {
     });
 
     server.start();
-    logger.info("Server Started on port 9092");
+    logger.info("Server Started on port " + EnvVars.CHAT_SERVICE_PORT);
     server.awaitTermination();
   }
 }
